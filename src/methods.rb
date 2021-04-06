@@ -48,21 +48,24 @@ end
 
 # Function that runs coin face selection/Betting
 def play
+    font = font_instance
     if coin_flip == coin_flip_selection
         system("clear")
         $win_streak += 1
         if $win_streak >= 2
             $user_balance += ((user_bet_amount) * $win_streak) 
-            puts "YOU WIN! New Balance: $#{$user_balance} || Current Win Streak Multipier: #{$win_streak}x"
+            system("clear")
+            puts "YOU WON!!! New Balance: $#{$user_balance} || Current Win Streak Multipier: #{$win_streak}x"
         else
             $user_balance += user_bet_amount
-            puts "YOU WIN! New Balance: $#{$user_balance} || Current Win Streak: #{$win_streak}"
+            system("clear")
+            puts "YOU WON!!! New Balance: $#{$user_balance} || Current Win Streak: #{$win_streak}"
         end
     else 
-        system("clear")
         $user_balance -= user_bet_amount
         $win_streak -= $win_streak
-        puts "ooof, sorry that was incorrect. NEW BALANCE: $#{$user_balance} Current Win Streak: #{$win_streak}"
+        system("clear")
+        puts "ooof, sorry that was incorrect. NEW BALANCE: $#{$user_balance} || Current Win Streak: #{$win_streak}"
         if $user_balance == 0
             system("clear")
             $user_balance += 50

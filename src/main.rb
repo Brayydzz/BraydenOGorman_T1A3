@@ -8,6 +8,6 @@ $user_balance = 1000
 $win_streak = 0
 
 
-play
+main_menu
 
 
