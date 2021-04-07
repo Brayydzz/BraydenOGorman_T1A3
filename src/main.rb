@@ -5,9 +5,6 @@ require 'csv'
 require_relative 'methods'
 require_relative 'classes/user_class'
 
-$user_balance = 1000
-$win_streak = 0
-
 $users = CSV.open("user_data.csv", "r").read
 $current_user = {}
 

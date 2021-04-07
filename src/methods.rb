@@ -46,6 +46,8 @@ def login_menu
     end
 end
 
+
+# HAVING ISSUES WHEN USER INPUTS USERNAME NOT INCCORECT. RETURNING FALSE FROM find_username. <<<<<
 # Allows user to login with user details
 def login
     prompt = prompt_instance
@@ -56,10 +58,15 @@ def login
         $current_user[:password] = user_data[1]
         $current_user[:balance] = user_data[2]
         $current_user[:streak] = user_data[3]
+        p $current_user
         prompt.select("Succesful Login!") do |menu|
             menu.choice "CONTINUE", -> {main_menu}
-        p $current_user
-    end
+        end
+    else
+        prompt.select("Incorrect Username or Password. Please try again") do |menu|
+        menu.choice "TRY AGAIN", -> {login}
+        menu.choice "BACK TO MENU", -> {start_menu}
+        end
     end
 end
 
@@ -111,28 +118,30 @@ end
 
 # Function that runs coin face selection/Betting. Also multiplier bonus
 def play
+    balance = $current_user[:balance].to_i
+    streak = $current_user[:streak].to_i
     font = font_instance
     if coin_flip == coin_flip_selection
         system("clear")
-        $win_streak += 1
-        if $win_streak >= 2
-            $user_balance += ((user_bet_amount) * $win_streak) 
+        streak += 1
+        if streak >= 2
+            balance += (user_bet_amount * streak) 
             system("clear")
-            puts "YOU WON!!! New Balance: $#{$user_balance} || Current Win Streak Multipier: #{$win_streak}x"
+            puts "YOU WON!!! New Balance: $#{balance} || Current Win Streak Multipier: #{streak}x"
         else
-            $user_balance += user_bet_amount
+            balance += user_bet_amount
             system("clear")
-            puts "YOU WON!!! New Balance: $#{$user_balance} || Current Win Streak: #{$win_streak}"
+            puts "YOU WON!!! New Balance: $#{balance} || Current Win Streak: #{streak}"
         end
     else 
-        $user_balance -= user_bet_amount
-        $win_streak -= $win_streak
+        balance -= user_bet_amount
+        streak -= streak
         system("clear")
-        puts "ooof, sorry that was incorrect. NEW BALANCE: $#{$user_balance} || Current Win Streak: #{$win_streak}"
-        if $user_balance == 0
+        puts "ooof, sorry that was incorrect. NEW BALANCE: $#{balance} || Current Win Streak: #{streak}"
+        if balance == 0
             system("clear")
-            $user_balance += 50
-            puts "I can see you ran out of money. Here is $50 on the house. Goodluck! NEW BALANCE: $#{$user_balance}"
+            balance += 50
+            puts "I can see you ran out of money. Here is $50 on the house. Goodluck! NEW BALANCE: $#{balance}"
         end
     end
     play_again
@@ -160,10 +169,10 @@ end
 def user_bet_amount
     system("clear")
     font = font_instance
-    puts font.write("Current Balance: $#{$user_balance}")
+    puts font.write("Current Balance: $#{balance}")
     prompt = prompt_instance
     prompt.ask("How much you would like to bet? Please only input a number: $", convert: :int) do |q|
-        q.in 0..$user_balance
+        q.in 0..balance
         q.messages[:convert?] = "Please input a number value only"
         q.messages[:range?] = "Insufficient funds, Please try again"
     end
