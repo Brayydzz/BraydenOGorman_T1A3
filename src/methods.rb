@@ -48,8 +48,19 @@ end
 
 # Allows user to login with user details
 def login
+    prompt = prompt_instance
     username, password = get_user_details
-
+    user_data = find_username(username)
+    if user_data[1] == password
+        $current_user[:username] = user_data[0]
+        $current_user[:password] = user_data[1]
+        $current_user[:balance] = user_data[2]
+        $current_user[:streak] = user_data[3]
+        prompt.select("Succesful Login!") do |menu|
+            menu.choice "CONTINUE", -> {main_menu}
+        p $current_user
+    end
+    end
 end
 
 # signs up new user
@@ -81,7 +92,7 @@ end
 def find_username(username)
     $users.each do |line|
         if line[0] == username
-            return true
+            return line
         end
     end
     return false
