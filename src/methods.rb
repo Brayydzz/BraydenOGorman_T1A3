@@ -46,7 +46,12 @@ def login_menu
     end
 end
 
-# Function that runs coin face selection/Betting
+# Allows user to input username and password to create to user.
+def sign_up
+    
+end
+
+# Function that runs coin face selection/Betting. Also multiplier bonus
 def play
     font = font_instance
     if coin_flip == coin_flip_selection
@@ -77,13 +82,20 @@ end
 
 # Generate coin flip output
 def coin_flip
-font = font_instance
-    if rand(1..2) == 1
-        coin = "Heads"
-    else 
-        coin = "Tails"
-    end    
-    return coin
+    return (rand(1..2) == 1 ? "HEADS" : "TAILS")
+end
+
+# Function that allows user to select heads or tails
+def coin_flip_selection
+    system("clear")
+    prompt = prompt_instance
+    font = font_instance
+    puts font.write("Heads or Tails?")
+    prompt.select("Select whether you think the coin will land on Heads or Tails?") do |menu|
+        menu.choice "HEADS"
+        menu.choice "TAILS"
+        menu.choice "BACK", -> {main_menu}
+    end
 end
 
 # Fuction that allows user to input bet amount via input
@@ -99,18 +111,6 @@ def user_bet_amount
     end
 end
 
-# Function that allows user to select heads or tails
-def coin_flip_selection
-    system("clear")
-    prompt = prompt_instance
-    font = font_instance
-    puts font.write("Heads or Tails?")
-    prompt.select("Select whether you think the coin will land on Heads or Tails?") do |menu|
-        menu.choice "Heads"
-        menu.choice "Tails"
-    end
-end
-
 # Play again menu selection
 def play_again
     puts "-----------------------------------------------------------------------"
@@ -123,12 +123,13 @@ def play_again
     end
 end
 
+# How to play menu selection in Start menu
 def how_to
     system("clear")
     font = font_instance
     prompt = prompt_instance
     puts font.write("How To Play")
     prompt.select("", show_help: :never) do |menu|
-        menu.choice "Back", ->{start_menu}        
+        menu.choice "Back", -> {start_menu}        
     end
 end
