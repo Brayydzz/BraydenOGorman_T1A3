@@ -40,15 +40,62 @@ def login_menu
     system("clear")
     prompt = prompt_instance
     prompt.select("Select option!") do |menu|
-        menu.choice "LOGIN", -> {main_menu}
-        menu.choice "SIGN UP", -> {main_menu}
+        menu.choice "LOGIN", -> {login}
+        menu.choice "SIGN UP", -> {sign_up}
         menu.choice "BACK", -> {start_menu}
     end
 end
 
-# Allows user to input username and password to create to user.
+# Allows user to login with user details
+def login
+    username, password = get_user_details
+
+end
+
+# signs up new user
 def sign_up
-    
+    prompt = prompt_instance
+    balance = 250
+    streak = 0
+    username, password = get_user_details
+    username_taken = find_username(username)
+    if username_taken == false    
+        append_to_csv(username, password, balance, streak)
+    else
+        system('clear')
+        prompt.select("The username you have entered already exists. Please try again") do |menu|
+        menu.choice "TRY AGAIN", -> {sign_up}
+        menu.choice "BACK TO MENU", ->{start_menu}
+        end
+    end
+    login_menu
+end
+
+# Appends signup details to csv
+def append_to_csv(username, password, balance, streak)
+    CSV.open("user_data.csv", "a") do |csv|
+        csv << [username,password, balance, streak]
+    end
+end
+
+def find_username(username)
+    $users.each do |line|
+        if line[0] == username
+            return true
+        end
+    end
+    return false
+end
+
+# Allows user to input username and password to create to user/login.
+def get_user_details
+    prompt = prompt_instance
+    system("clear")
+    username = prompt.ask("Please enter username:") do |q|
+    end
+    password = prompt.ask("Please enter password:") do |q|
+    end
+    return username, password
 end
 
 # Function that runs coin face selection/Betting. Also multiplier bonus
