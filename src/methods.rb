@@ -116,7 +116,7 @@ def get_user_details
     system("clear")
     username = prompt.ask("Please enter username:") do |q|
     end
-    password = prompt.ask("Please enter password:") do |q|
+    password = prompt.mask("Please enter password:") do |q|
     end
     return username, password
 end
