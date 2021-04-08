@@ -226,7 +226,7 @@ end
 def leaderboard
     scores = []
     $users.each do |x|
-        scores << {username: x[0], score: x[2]}
+        scores << {"username:" => x[0], "score" => x[2]}
     end
     puts scores
 end
