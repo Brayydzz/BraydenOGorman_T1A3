@@ -3,7 +3,6 @@ require "tty-font"
 require "colorize"
 require 'csv'
 require_relative 'methods'
-require_relative 'classes/user_class'
 
 $users = CSV.open("user_data.csv", "r").read
 $current_user = {}
@@ -24,4 +23,12 @@ $current_user = {}
 #     steak: line[1]
 # }
 # $username = line[0]
+
+# update_user_data
 start_menu
+
+# update_user_data
+# overwrite users.csv with $users
+
+
+

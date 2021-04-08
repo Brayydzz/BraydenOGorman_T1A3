@@ -1,5 +1,6 @@
 require "tty-prompt"
 require "tty-font"
+require 'csv'
 
 def prompt_instance
     TTY::Prompt.new
@@ -31,7 +32,7 @@ def main_menu
     prompt.select("Select option!") do |menu|
         menu.choice "PLAY", -> {play}
         menu.choice "LEADERBOARD"
-        menu.choice "LOG OUT", -> {start_menu}
+        menu.choice "LOG OUT", -> {logout}
     end
 end
 
@@ -47,25 +48,26 @@ def login_menu
 end
 
 
-# HAVING ISSUES WHEN USER INPUTS USERNAME NOT INCCORECT. RETURNING FALSE FROM find_username. <<<<<
 # Allows user to login with user details
 def login
     prompt = prompt_instance
     username, password = get_user_details
     user_data = find_username(username)
-    if user_data[1] == password
-        $current_user[:username] = user_data[0]
-        $current_user[:password] = user_data[1]
-        $current_user[:balance] = user_data[2]
-        $current_user[:streak] = user_data[3]
-        p $current_user
-        prompt.select("Succesful Login!") do |menu|
-            menu.choice "CONTINUE", -> {main_menu}
+    if user_data
+        if user_data[1] == password
+            $current_user[:username] = user_data[0]
+            $current_user[:password] = user_data[1]
+            $current_user[:balance] = user_data[2]
+            $current_user[:streak] = user_data[3]
+            puts "Hello #{$current_user[:username]}! Your current balance is: $#{$current_user[:balance]}"
+            prompt.select("Succesful Login!") do |menu|
+                menu.choice "CONTINUE", -> {main_menu}
+            end
         end
-    else
+    else    
         prompt.select("Incorrect Username or Password. Please try again") do |menu|
-        menu.choice "TRY AGAIN", -> {login}
-        menu.choice "BACK TO MENU", -> {start_menu}
+            menu.choice "TRY AGAIN", -> {login}
+            menu.choice "BACK TO MENU", -> {start_menu}
         end
     end
 end
@@ -78,7 +80,7 @@ def sign_up
     username, password = get_user_details
     username_taken = find_username(username)
     if username_taken == false    
-        append_to_csv(username, password, balance, streak)
+        $users.push([username, password, balance, streak])
     else
         system('clear')
         prompt.select("The username you have entered already exists. Please try again") do |menu|
@@ -89,12 +91,21 @@ def sign_up
     login_menu
 end
 
-# Appends signup details to csv
-def append_to_csv(username, password, balance, streak)
-    CSV.open("user_data.csv", "a") do |csv|
-        csv << [username,password, balance, streak]
+def logout
+    update_user_data
+    prompt = prompt_instance
+    prompt.select("Are you sure you want to log out?") do |menu|
+    menu.choice "YES", -> {start_menu}
+    menu.choice "NO", -> {main_menu}
     end
 end
+
+# Appends signup details to csv
+# def append_to_csv(username, password, balance, streak)
+    # CSV.open("user_data.csv", "a") do |csv|
+    #     csv << [username,password, balance, streak]
+    # end
+# end
 
 def find_username(username)
     $users.each do |line|
@@ -116,6 +127,19 @@ def get_user_details
     return username, password
 end
 
+# Write a function that can take the $current_user hash and overwrite/update that users data in user_data.csv
+def update_user_data
+    $users.each {|user| 
+        if $current_user[:username] == user[0]
+            user[2] = $current_user[:balance]
+            user[3] = $current_user[:streak]
+            CSV.open("user_data.csv", "w") do |csv|
+                $users.each {|x| csv << x}
+            end
+        end
+    }
+end
+
 # Function that runs coin face selection/Betting. Also multiplier bonus
 def play
     balance = $current_user[:balance].to_i
@@ -123,24 +147,24 @@ def play
     font = font_instance
     if coin_flip == coin_flip_selection
         system("clear")
-        streak += 1
+        $current_user[:streak] = streak += 1
         if streak >= 2
-            balance += (user_bet_amount * streak) 
+            $current_user[:balance] = balance += (user_bet_amount * streak) 
             system("clear")
             puts "YOU WON!!! New Balance: $#{balance} || Current Win Streak Multipier: #{streak}x"
         else
-            balance += user_bet_amount
+            $current_user[:balance] = balance += user_bet_amount
             system("clear")
             puts "YOU WON!!! New Balance: $#{balance} || Current Win Streak: #{streak}"
         end
     else 
-        balance -= user_bet_amount
-        streak -= streak
+        $current_user[:balance] = balance -= user_bet_amount
+        $current_user[:streak] = streak -= streak
         system("clear")
         puts "ooof, sorry that was incorrect. NEW BALANCE: $#{balance} || Current Win Streak: #{streak}"
         if balance == 0
             system("clear")
-            balance += 50
+            $current_user[:balance] = balance += 50
             puts "I can see you ran out of money. Here is $50 on the house. Goodluck! NEW BALANCE: $#{balance}"
         end
     end
@@ -167,6 +191,7 @@ end
 
 # Fuction that allows user to input bet amount via input
 def user_bet_amount
+    balance = $current_user[:balance].to_i
     system("clear")
     font = font_instance
     puts font.write("Current Balance: $#{balance}")
