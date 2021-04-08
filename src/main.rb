@@ -26,9 +26,9 @@ $current_user = {}
 # $username = line[0]
 
 
-# leaderboard
+leaderboard
 # p $users
 
-start_menu
+# start_menu
 
 

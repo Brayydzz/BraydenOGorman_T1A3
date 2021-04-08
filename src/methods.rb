@@ -121,7 +121,7 @@ def get_user_details
     return username, password
 end
 
-# Write a function that can take the $current_user hash and overwrite/update that users data in user_data.csv
+# function that can take the $current_user hash and overwrite/update that users data in user_data.csv
 def update_user_data
     $users.each {|user| 
         if $current_user[:username] == user[0]
@@ -228,7 +228,16 @@ def leaderboard
     $users.each do |x|
         scores << {"username:" => x[0], "score" => x[2]}
     end
-    puts scores
+    scores.each do |element|
+        if element.class == Hash
+          element.each do |key, value|
+            puts "key: #{key}, value: #{value}"
+          end
+        end
+    end
 end
 
 # I want to take each array in user data. output to hash and order them by :balance value.
+
+
+#LEADERBOARD
