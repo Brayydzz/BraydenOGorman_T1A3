@@ -2,6 +2,7 @@ require "tty-prompt"
 require "tty-font"
 require "colorize"
 require 'csv'
+require 'json'
 require_relative 'methods'
 
 $users = CSV.open("user_data.csv", "r").read
@@ -24,11 +25,8 @@ $current_user = {}
 # }
 # $username = line[0]
 
-# update_user_data
-start_menu
 
-# update_user_data
-# overwrite users.csv with $users
-
+leaderboard
+# p $users
 
 

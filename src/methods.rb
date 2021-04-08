@@ -1,5 +1,6 @@
 require "tty-prompt"
 require "tty-font"
+require "json"
 require 'csv'
 
 def prompt_instance
@@ -72,6 +73,15 @@ def login
     end
 end
 
+#allows user to log out and updates user_data.csv 
+def logout
+    update_user_data
+    prompt = prompt_instance
+    prompt.select("Are you sure you want to log out?") do |menu|
+    menu.choice "YES", -> {start_menu}
+    menu.choice "NO", -> {main_menu}
+    end
+end
 # signs up new user
 def sign_up
     prompt = prompt_instance
@@ -90,22 +100,6 @@ def sign_up
     end
     login_menu
 end
-
-def logout
-    update_user_data
-    prompt = prompt_instance
-    prompt.select("Are you sure you want to log out?") do |menu|
-    menu.choice "YES", -> {start_menu}
-    menu.choice "NO", -> {main_menu}
-    end
-end
-
-# Appends signup details to csv
-# def append_to_csv(username, password, balance, streak)
-    # CSV.open("user_data.csv", "a") do |csv|
-    #     csv << [username,password, balance, streak]
-    # end
-# end
 
 def find_username(username)
     $users.each do |line|
@@ -220,8 +214,21 @@ def how_to
     system("clear")
     font = font_instance
     prompt = prompt_instance
+    file = File.read('how_to_play.json')
+    how_to=JSON.parse(file)
     puts font.write("How To Play")
+    puts how_to 
     prompt.select("", show_help: :never) do |menu|
         menu.choice "Back", -> {start_menu}        
     end
 end
+
+def leaderboard
+    scores = []
+    $users.each do |x|
+        scores << {username: x[0], score: x[2]}
+    end
+    puts scores
+end
+
+# I want to take each array in user data. output to hash and order them by :balance value.
