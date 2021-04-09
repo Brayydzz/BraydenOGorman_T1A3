@@ -20,7 +20,7 @@ def start_menu
     prompt.select("Select option!".colorize(:magenta)) do |menu|
         menu.choice "START".colorize(:blue), -> {login_menu}
         menu.choice "HOW TO PLAY".colorize(:color => :yellow), -> {how_to}
-        menu.choice "EXIT".colorize(:red), -> {exit}
+        menu.choice "EXIT".colorize(:red), -> {exit_program}
     end
 end
 
@@ -228,6 +228,7 @@ def how_to
     end
 end
 
+# I want to take each array in user data. output to hash and order them by :balance value.
 def leaderboard
     update_user_data
     font = font_instance
@@ -237,23 +238,21 @@ def leaderboard
     puts font.write("LEADERBOARD")
     puts "--------------------------------------------------------------------------"
     $users.each do |x|
-        scores << {username: x[0], score: x[2]}
+        scores << {username: x[0], score: x[2].to_i}
     end
+    scores.sort_by! { |hash| hash[:score] }
+    scores.reverse!
     scores.each do |x|
-        puts "#{x[:username]}  SCORE: $#{x[:score]}"
+        puts "#{x[:username]}  SCORE: $#{x[:score]}".colorize(:magenta)
     end
     prompt.select("", show_help: :never) do |menu|
         menu.choice "Back".colorize(:red), -> {main_menu}  
     end
 end
 
-def exit
+def exit_program
     font = font_instance
     system('clear')
     abort font.write("THANK YOU FOR PLAYING")     
 end
 
-# I want to take each array in user data. output to hash and order them by :balance value.
-
-
-#LEADERBOARD
