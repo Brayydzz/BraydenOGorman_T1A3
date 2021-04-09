@@ -31,9 +31,9 @@ def main_menu
     prompt = prompt_instance
     puts font.write("MAIN MENU")
     prompt.select("Select option!".colorize(:magenta)) do |menu|
-        menu.choice "PLAY", -> {play}
-        menu.choice "LEADERBOARD", -> {leaderboard}
-        menu.choice "LOG OUT", -> {logout}
+        menu.choice "PLAY".colorize(:green), -> {play}
+        menu.choice "LEADERBOARD".colorize(:yellow), -> {leaderboard}
+        menu.choice "LOG OUT".colorize(:red), -> {logout}
     end
 end
 
@@ -184,7 +184,7 @@ def coin_flip_selection
     prompt.select("Select whether you think the coin will land on Heads or Tails?") do |menu|
         menu.choice "HEADS"
         menu.choice "TAILS"
-        menu.choice "BACK", -> {main_menu}
+        menu.choice "BACK".colorize(:red), -> {main_menu}
     end
 end
 
@@ -207,8 +207,8 @@ def play_again
     puts "-----------------------------------------------------------------------"
     font = font_instance
     prompt = prompt_instance
-    puts font.write("Play again?".colorize(:magenta))
-    prompt.select("Would you like to play again?") do |menu|
+    puts font.write("Play again?")
+    prompt.select("Would you like to play again?".colorize(:magenta)) do |menu|
         menu.choice "YES", -> {play}
         menu.choice "NO", -> {main_menu}
     end
