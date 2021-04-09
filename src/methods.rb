@@ -20,7 +20,7 @@ def start_menu
     prompt.select("Select option!") do |menu|
         menu.choice "START", -> {login_menu}
         menu.choice "HOW TO PLAY", -> {how_to}
-        menu.choice "EXIT"
+        menu.choice "EXIT", -> {exit}
     end
 end
 
@@ -32,7 +32,7 @@ def main_menu
     puts font.write("MAIN MENU")
     prompt.select("Select option!") do |menu|
         menu.choice "PLAY", -> {play}
-        menu.choice "LEADERBOARD"
+        menu.choice "LEADERBOARD", -> {leaderboard}
         menu.choice "LOG OUT", -> {logout}
     end
 end
@@ -61,7 +61,7 @@ def login
             $current_user[:balance] = user_data[2]
             $current_user[:streak] = user_data[3]
             puts "Hello #{$current_user[:username]}! Your current balance is: $#{$current_user[:balance]}"
-            prompt.select("Succesful Login!") do |menu|
+            prompt.select("Succesful Login!", show_help: :never) do |menu|
                 menu.choice "CONTINUE", -> {main_menu}
             end
         end
@@ -224,17 +224,28 @@ def how_to
 end
 
 def leaderboard
+    update_user_data
+    font = font_instance
+    prompt = prompt_instance
     scores = []
+    system('clear')
+    puts font.write("LEADERBOARD")
+    puts "--------------------------------------------------------------------------"
     $users.each do |x|
-        scores << {"username:" => x[0], "score" => x[2]}
+        scores << {username: x[0], score: x[2]}
     end
-    scores.each do |element|
-        if element.class == Hash
-          element.each do |key, value|
-            puts "key: #{key}, value: #{value}"
-          end
-        end
+    scores.each do |x|
+        puts "#{x[:username]}  SCORE: $#{x[:score]}"
     end
+    prompt.select("", show_help: :never) do |menu|
+        menu.choice "Back", -> {main_menu}  
+    end
+end
+
+def exit
+    font = font_instance
+    system('clear')
+    abort font.write("THANK YOU FOR PLAYING")     
 end
 
 # I want to take each array in user data. output to hash and order them by :balance value.
