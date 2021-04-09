@@ -17,10 +17,10 @@ def start_menu
     font = font_instance
     prompt = prompt_instance
     puts font.write("WELCOME TO FLIP BET")
-    prompt.select("Select option!") do |menu|
-        menu.choice "START", -> {login_menu}
-        menu.choice "HOW TO PLAY", -> {how_to}
-        menu.choice "EXIT", -> {exit}
+    prompt.select("Select option!".colorize(:magenta)) do |menu|
+        menu.choice "START".colorize(:blue), -> {login_menu}
+        menu.choice "HOW TO PLAY".colorize(:color => :yellow), -> {how_to}
+        menu.choice "EXIT".colorize(:red), -> {exit}
     end
 end
 
@@ -30,7 +30,7 @@ def main_menu
     font = font_instance
     prompt = prompt_instance
     puts font.write("MAIN MENU")
-    prompt.select("Select option!") do |menu|
+    prompt.select("Select option!".colorize(:magenta)) do |menu|
         menu.choice "PLAY", -> {play}
         menu.choice "LEADERBOARD", -> {leaderboard}
         menu.choice "LOG OUT", -> {logout}
@@ -41,10 +41,10 @@ end
 def login_menu
     system("clear")
     prompt = prompt_instance
-    prompt.select("Select option!") do |menu|
+    prompt.select("Select option!".colorize(:magenta)) do |menu|
         menu.choice "LOGIN", -> {login}
         menu.choice "SIGN UP", -> {sign_up}
-        menu.choice "BACK", -> {start_menu}
+        menu.choice "BACK".colorize(:red), -> {start_menu}
     end
 end
 
@@ -64,11 +64,16 @@ def login
             prompt.select("Succesful Login!", show_help: :never) do |menu|
                 menu.choice "CONTINUE", -> {main_menu}
             end
+        else
+            prompt.select("Incorrect Username or Password. Please try again") do |menu|
+                menu.choice "TRY AGAIN", -> {login}
+                menu.choice "BACK TO MENU".colorize(:red), -> {start_menu}
+            end
         end
     else    
         prompt.select("Incorrect Username or Password. Please try again") do |menu|
             menu.choice "TRY AGAIN", -> {login}
-            menu.choice "BACK TO MENU", -> {start_menu}
+            menu.choice "BACK TO MENU".colorize(:red), -> {start_menu}
         end
     end
 end
@@ -78,8 +83,8 @@ def logout
     update_user_data
     prompt = prompt_instance
     prompt.select("Are you sure you want to log out?") do |menu|
-    menu.choice "YES", -> {start_menu}
-    menu.choice "NO", -> {main_menu}
+    menu.choice "YES".colorize(:green), -> {start_menu}
+    menu.choice "NO".colorize(:red), -> {main_menu}
     end
 end
 # signs up new user
@@ -95,7 +100,7 @@ def sign_up
         system('clear')
         prompt.select("The username you have entered already exists. Please try again") do |menu|
         menu.choice "TRY AGAIN", -> {sign_up}
-        menu.choice "BACK TO MENU", ->{start_menu}
+        menu.choice "BACK TO MENU".colorize(:red), ->{start_menu}
         end
     end
     login_menu
@@ -145,17 +150,17 @@ def play
         if streak >= 2
             $current_user[:balance] = balance += (user_bet_amount * streak) 
             system("clear")
-            puts "YOU WON!!! New Balance: $#{balance} || Current Win Streak Multipier: #{streak}x"
+            puts "YOU WON!!!".colorize(:green) + " New Balance: $#{balance} ||" + " Current Win Streak Multipier: #{streak}x".colorize(:blue)
         else
             $current_user[:balance] = balance += user_bet_amount
             system("clear")
-            puts "YOU WON!!! New Balance: $#{balance} || Current Win Streak: #{streak}"
+            puts "YOU WON!!!".colorize(:green) + " New Balance: $#{balance} ||" + " Current Win Streak: #{streak}".colorize(:blue)
         end
     else 
         $current_user[:balance] = balance -= user_bet_amount
         $current_user[:streak] = streak -= streak
         system("clear")
-        puts "ooof, sorry that was incorrect. NEW BALANCE: $#{balance} || Current Win Streak: #{streak}"
+        puts "ooof, sorry that was incorrect. NEW BALANCE: $#{balance} || Current Win Streak: #{streak}".colorize(:red)
         if balance == 0
             system("clear")
             $current_user[:balance] = balance += 50
@@ -202,7 +207,7 @@ def play_again
     puts "-----------------------------------------------------------------------"
     font = font_instance
     prompt = prompt_instance
-    puts font.write("Play again?")
+    puts font.write("Play again?".colorize(:magenta))
     prompt.select("Would you like to play again?") do |menu|
         menu.choice "YES", -> {play}
         menu.choice "NO", -> {main_menu}
@@ -238,7 +243,7 @@ def leaderboard
         puts "#{x[:username]}  SCORE: $#{x[:score]}"
     end
     prompt.select("", show_help: :never) do |menu|
-        menu.choice "Back", -> {main_menu}  
+        menu.choice "Back".colorize(:red), -> {main_menu}  
     end
 end
 

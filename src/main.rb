@@ -1,6 +1,7 @@
 require "tty-prompt"
 require "tty-font"
 require "colorize"
+require 'colorized_string'
 require 'csv'
 require 'json'
 require_relative 'methods'
@@ -13,3 +14,4 @@ $current_user = {}
 
 
 start_menu
+# puts ColorizedString.colors 
