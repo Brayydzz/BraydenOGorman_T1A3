@@ -48,7 +48,6 @@ def login_menu
     end
 end
 
-
 # Allows user to login with user details
 def login
     prompt = prompt_instance
@@ -233,10 +232,10 @@ def leaderboard
     update_user_data
     font = font_instance
     prompt = prompt_instance
-    scores = []
     system('clear')
     puts font.write("LEADERBOARD")
     puts "--------------------------------------------------------------------------"
+    scores = []
     $users.each do |x|
         scores << {username: x[0], score: x[2].to_i}
     end

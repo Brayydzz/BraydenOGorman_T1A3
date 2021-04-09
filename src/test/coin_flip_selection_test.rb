@@ -2,4 +2,7 @@ require "test/unit/assertions"
 include Test::Unit::Assertions
 require_relative "../methods"
 
-assert_equal(coin_flip, "HEADS")
+results = ["HEADS", "TAILS"]
+assert(results.include? coin_flip)
+results = []
+assert_false(results.include? coin_flip)
