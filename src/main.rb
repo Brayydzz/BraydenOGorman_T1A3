@@ -9,5 +9,3 @@ $users = CSV.open("user_data.csv", "r").read
 $current_user = {}
 
 start_menu
-
-# leaderboard
