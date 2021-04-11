@@ -2,6 +2,8 @@ require "test/unit/assertions"
 include Test::Unit::Assertions
 require_relative "../methods"
 
+# This test is to check to see if the find_username method works correctly
+
 $users = [
     ["user1", "pass1"],
     ["user2", "pass2"],
