@@ -227,7 +227,7 @@ def how_to
     end
 end
 
-# I want to take each array in user data. output to hash and order them by :balance value.
+# I want to take each array in user data. output to hash and order them by :balance value to be displayed to the user.
 def leaderboard
     update_user_data
     font = font_instance
