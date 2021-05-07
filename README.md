@@ -116,7 +116,7 @@ Throughout the planning process I knew I wanted to use an Agile project manageme
 Link to Trello board: https://trello.com/b/uADKqNR1/t1a3-terminal-app
 
 
-*** 
+
 ## Checklist:
 
 ### **MVP FEATURES**
